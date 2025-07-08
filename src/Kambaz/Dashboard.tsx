@@ -22,9 +22,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> CS3650 Computer Systems </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                Low level dev  </p>
               <button> Go </button>
             </div>
           </Link>
@@ -34,9 +34,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> CS3000 Algo </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                Algorithms dev  </p>
               <button> Go </button>
             </div>
           </Link>
@@ -46,9 +46,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> ECE4972 Capstone </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                ECE  </p>
               <button> Go </button>
             </div>
           </Link>
@@ -58,9 +58,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> EECE2520 Linear Systems </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                Electrical Engineer  </p>
               <button> Go </button>
             </div>
           </Link>
@@ -70,9 +70,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> DS3000 Data Science </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                Data scientist  </p>
               <button> Go </button>
             </div>
           </Link>
@@ -82,9 +82,9 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link" >
             <img src="/images/canvasDefault.png" width={200} />
             <div>
-              <h5> CS1234 React JS </h5>
+              <h5> Pancake making class </h5>
               <p className="wd-dashboard-course-title">
-                Full Stack software developer  </p>
+                Pancakes  </p>
               <button> Go </button>
             </div>
           </Link>
