@@ -7,6 +7,11 @@ export default function Labs() {
   return (
     <div>
       <h1>Labs</h1>
+      Jiwoo Yoon
+      Section 1
+      <br></br>
+      <a href="https://github.com/benyoon2003/kambaz-react-web-app" id="wd-github">click here </a>
+      to go to the github<br />
       <TOC />
       <Routes>
         <Route path="/" element={<Navigate to="Lab1" />} />
@@ -15,4 +20,5 @@ export default function Labs() {
         <Route path="Lab3" element={<Lab3 />} />
       </Routes>
     </div>
-);}
+  );
+}
