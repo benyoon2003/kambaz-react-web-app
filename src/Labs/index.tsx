@@ -12,6 +12,8 @@ export default function Labs() {
       <br></br>
       <a href="https://github.com/benyoon2003/kambaz-react-web-app" id="wd-github">click here </a>
       to go to the github<br />
+      <a href="visionary-taiyaki-9e7215.netlify.app" id="wd-app">click here </a>
+      to go to the application<br />
       <TOC />
       <Routes>
         <Route path="/" element={<Navigate to="Lab1" />} />
