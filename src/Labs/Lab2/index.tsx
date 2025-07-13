@@ -12,9 +12,17 @@ import Float from "./Float.tsx"
 import GridLayout from "./GridLayout.tsx"
 import Flex from "./Flex.tsx"
 import ReactIconsSampler from "./ReactIcons.tsx"
+import { Container } from 'react-bootstrap';
+import BootstrapGrid from "./BootstrapGrids.tsx"
+import ScreenSizeLabel from "./ScreenSizeLabel.tsx"
+import BootstrapTable from "./BootstrapTables.tsx";
+import BootstrapList from "./BootstrapLists.tsx"
+import BootstrapForm from "./Bootstrapforms.tsx";
+import BootstrapNavigation from "./BootstrapNavigation.tsx"
+
 export default function Lab2() {
-  return (
-    <div id="wd-lab2">
+  return ( 
+        <Container id="wd-lab2">
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
       <p>
@@ -80,7 +88,12 @@ export default function Lab2() {
       <GridLayout/>
       <Flex/>
       <ReactIconsSampler/> 
+      <BootstrapGrid />
+      <ScreenSizeLabel />
+      <BootstrapTable />
+      <BootstrapList />
+      <BootstrapForm />
+      <BootstrapNavigation/>
 
-
-    </div>);
+    </Container>);
 }
