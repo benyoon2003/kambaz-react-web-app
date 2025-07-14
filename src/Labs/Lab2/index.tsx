@@ -17,7 +17,7 @@ import BootstrapGrid from "./BootstrapGrids.tsx"
 import ScreenSizeLabel from "./ScreenSizeLabel.tsx"
 import BootstrapTable from "./BootstrapTables.tsx";
 import BootstrapList from "./BootstrapLists.tsx"
-import BootstrapForm from "./Bootstrapforms.tsx";
+import BootstrapForm from "./BootstrapForms.tsx";
 import BootstrapNavigation from "./BootstrapNavigation.tsx"
 
 export default function Lab2() {
