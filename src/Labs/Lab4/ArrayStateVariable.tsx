@@ -5,7 +5,7 @@ export default function ArrayStateVariable() {
    setArray([...array, Math.floor(Math.random() * 100)]);
  };
  const deleteElement = (index: number) => {
-   setArray(array.filter((item, i) => i !== index));
+   setArray(array.filter((_item, i) => i !== index));
  };
  return (
     <div id="wd-array-state-variables" className="p-3">
@@ -16,7 +16,7 @@ export default function ArrayStateVariable() {
       </button>
 
       <div className="border rounded p-2">
-        <ul className="list-group">
+        <ul className="list-group">/
           {array.map((item, index) => (
             <li
               key={index}

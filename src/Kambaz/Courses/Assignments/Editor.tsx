@@ -3,7 +3,7 @@ import { ListGroup, InputGroup, FormControl, Button } from "react-bootstrap";
 import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment, editAssignment } from "./reducer";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams();

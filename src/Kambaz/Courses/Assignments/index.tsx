@@ -3,7 +3,7 @@ import { ListGroup, InputGroup, FormControl, Button, Modal } from "react-bootstr
 import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment, editAssignment } from "./reducer";
+import { deleteAssignment } from "./reducer";
 import { useState } from "react";
 
 export default function Assignments() {

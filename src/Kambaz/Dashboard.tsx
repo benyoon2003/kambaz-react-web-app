@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FormControl } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -59,9 +59,9 @@ export default function Dashboard() {
 
   const displayedCourses = showAllCourses 
     ? courses 
-    : courses.filter((course) =>
+    : courses.filter((course: any) =>
         enrollments.some(
-          (enrollment) =>
+          (enrollment: any) =>
             enrollment.user === currentUser._id &&
             enrollment.course === course._id
         ));
@@ -116,7 +116,7 @@ export default function Dashboard() {
       
       <div className="row" id="wd-dashboard-courses">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {displayedCourses.map((course) => {
+          {displayedCourses.map((course: any) => {
             const enrolled = isUserEnrolled(course._id);
             
             return (
