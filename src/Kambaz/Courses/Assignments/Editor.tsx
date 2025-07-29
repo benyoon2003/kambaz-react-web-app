@@ -1,142 +1,113 @@
-import { useParams, Link } from "react-router-dom";
-import { Form, Row, Col, Button } from "react-bootstrap";
-import * as db from "../../Database";
+import { useParams, useNavigate } from "react-router";
+import { ListGroup, InputGroup, FormControl, Button } from "react-bootstrap";
+import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment, editAssignment } from "./reducer";
 
-export default function AssignmentEditor() {
-  const { cid, aid } = useParams();
+export default function Assignments() {
+  const { cid } = useParams();
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
 
-  const assignment = db.assignments.find(
-    (a: any) => a.course === cid && a._id === aid
-  );
+  const courseAssignments = assignments.filter((a: any) => a.course === cid);
 
-  const defaultTitle = "A1 - ENV + HTML";
-  const defaultDescription = "The assignment is available online Submit a link to the landing page of your Web application...";
-  const defaultPoints = 100;
-  const defaultDue = "2024-05-13T23:59";
-  const defaultAvailableFrom = "2024-05-06T00:00";
-  const defaultAvailableUntil = "2024-05-20T00:00";
+  const handleAddAssignment = () => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
+  };
+
+  const handleDeleteAssignment = (assignmentId: string) => {
+    dispatch(deleteAssignment(assignmentId));
+  };
+
+  const handleEditAssignment = (assignmentId: string) => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
+  };
 
   return (
-    <div id="wd-assignments-editor" className="p-4">
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Label><h4>Assignment Name</h4></Form.Label>
-          <Form.Control
-            type="text"
-            defaultValue={assignment?.title || defaultTitle}
+    <div id="wd-assignments" className="p-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <InputGroup style={{ maxWidth: "300px" }}>
+          <InputGroup.Text className="bg-white border-end-0">
+            <FaSearch className="text-muted" />
+          </InputGroup.Text>
+          <FormControl
+            placeholder="Search for Assignments"
+            className="border-start-0"
+            id="wd-search-assignment"
           />
-        </Form.Group>
+        </InputGroup>
+        
+        {currentUser?.role === "FACULTY" && (
+          <div className="d-flex gap-2">
+            <Button variant="light" className="text-danger border border-secondary" id="wd-add-assignment-group">
+              <FaPlus className="me-1" /> Group
+            </Button>
+            <Button variant="danger" id="wd-add-assignment" onClick={handleAddAssignment}>
+              <FaPlus className="me-1" /> Assignment
+            </Button>
+          </div>
+        )}
+      </div>
+      
+      <h5 className="fw-bold d-flex align-items-center justify-content-between">
+        ASSIGNMENTS <span className="text-secondary">{courseAssignments.length * 10}% of Total</span>
+        {currentUser?.role === "FACULTY" && (
+          <Button variant="light" size="sm" onClick={handleAddAssignment}>
+            <FaPlus />
+          </Button>
+        )}
+      </h5>
+      
+      <ListGroup className="mt-3">
+        {courseAssignments.map((assignment: any) => (
+          <ListGroup.Item
+            key={assignment._id}
+            className="border-start border-5 border-success mb-2"
+          >
+            <div className="d-flex justify-content-between align-items-start">
+              <div className="flex-grow-1">
+                <div className="fw-semibold fs-6 text-primary">
+                  <FaBook className="me-2" />
+                  <span
+                    onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`)}
+                    className="text-decoration-none text-dark"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {assignment.title}
+                  </span>
+                </div>
+                <div className="text-muted small mt-1">
+                  Assignment ID: {assignment._id}
+                </div>
+              </div>
 
-        <Form.Group className="mb-4">
-          <Form.Control
-            as="textarea"
-            rows={6}
-            defaultValue={assignment?.description || defaultDescription}
-          />
-        </Form.Group>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Points</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Control
-              type="number"
-              defaultValue={assignment?.points ?? defaultPoints}
-            />
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Assignment Group</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Select defaultValue="ASSIGNMENTS">
-              <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-            </Form.Select>
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Display Grade as</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Select defaultValue="Percentage">
-              <option value="Percentage">Percentage</option>
-            </Form.Select>
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-start">
-          <Col sm={2}>
-            <Form.Label>Submission Type</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Select defaultValue="Online" className="mb-2">
-              <option value="Online">Online</option>
-            </Form.Select>
-
-            <Form.Check type="checkbox" id="text-entry" label="Text Entry" />
-            <Form.Check type="checkbox" id="website-url" label="Website URL" defaultChecked />
-            <Form.Check type="checkbox" id="media-recordings" label="Media Recordings" />
-            <Form.Check type="checkbox" id="student-annotation" label="Student Annotation" />
-            <Form.Check type="checkbox" id="file-uploads" label="File Uploads" />
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Assign to</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Control type="text" defaultValue="Everyone" />
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Due</Form.Label>
-          </Col>
-          <Col sm={10}>
-            <Form.Control
-              type="datetime-local"
-              defaultValue={assignment?.due || defaultDue}
-            />
-          </Col>
-        </Row>
-
-        <Row className="mb-3 align-items-center">
-          <Col sm={2}>
-            <Form.Label>Available from</Form.Label>
-          </Col>
-          <Col sm={5}>
-            <Form.Control
-              type="datetime-local"
-              defaultValue={assignment?.availableFrom || defaultAvailableFrom}
-            />
-          </Col>
-          <Col sm={1} className="text-end">
-            <Form.Label>Until</Form.Label>
-          </Col>
-          <Col sm={4}>
-            <Form.Control
-              type="datetime-local"
-              defaultValue={assignment?.availableUntil || defaultAvailableUntil}
-            />
-          </Col>
-        </Row>
-
-        <div className="d-flex justify-content-end gap-2 mt-4">
-          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-            <Button variant="secondary">Cancel</Button>
-          </Link>
-          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-            <Button variant="danger">Save</Button>
-          </Link>
-        </div>
-      </Form>
+              {currentUser?.role === "FACULTY" && (
+                <div className="d-flex gap-2">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-primary p-0"
+                    onClick={() => handleEditAssignment(assignment._id)}
+                  >
+                    <FaPencil />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-danger p-0"
+                    onClick={() => handleDeleteAssignment(assignment._id)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   );
 }

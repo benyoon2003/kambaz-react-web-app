@@ -1,11 +1,48 @@
-import { useParams } from "react-router";
-import { ListGroup, InputGroup, FormControl, Button } from "react-bootstrap";
-import { FaPlus, FaSearch, FaBook } from "react-icons/fa";
-import * as db from "../../Database";
+import { useParams, useNavigate } from "react-router";
+import { ListGroup, InputGroup, FormControl, Button, Modal } from "react-bootstrap";
+import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment, editAssignment } from "./reducer";
+import { useState } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments.filter((a: any) => a.course === cid);
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
+
+  const courseAssignments = assignments.filter((a: any) => a.course === cid);
+
+  const handleAddAssignment = () => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
+  };
+
+  const handleDeleteClick = (assignment: any) => {
+    setAssignmentToDelete(assignment);
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete._id));
+    }
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const handleEditAssignment = (assignmentId: string) => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
+  };
 
   return (
     <div id="wd-assignments" className="p-4">
@@ -20,43 +57,92 @@ export default function Assignments() {
             id="wd-search-assignment"
           />
         </InputGroup>
-
-        <div className="d-flex gap-2">
-          <Button variant="light" className="text-danger border border-secondary" id="wd-add-assignment-group">
-            <FaPlus className="me-1" /> Group
-          </Button>
-          <Button variant="danger" id="wd-add-assignment">
-            <FaPlus className="me-1" /> Assignment
-          </Button>
-        </div>
+        
+        {currentUser?.role === "FACULTY" && (
+          <div className="d-flex gap-2">
+            <Button variant="light" className="text-danger border border-secondary" id="wd-add-assignment-group">
+              <FaPlus className="me-1" /> Group
+            </Button>
+            <Button variant="danger" id="wd-add-assignment" onClick={handleAddAssignment}>
+              <FaPlus className="me-1" /> Assignment
+            </Button>
+          </div>
+        )}
       </div>
-
+      
       <h5 className="fw-bold d-flex align-items-center justify-content-between">
-        ASSIGNMENTS <span className="text-secondary">{assignments.length * 10}% of Total</span>
-        <Button variant="light" size="sm"><FaPlus /></Button>
+        ASSIGNMENTS <span className="text-secondary">{courseAssignments.length * 10}% of Total</span>
+        {currentUser?.role === "FACULTY" && (
+          <Button variant="light" size="sm" onClick={handleAddAssignment}>
+            <FaPlus />
+          </Button>
+        )}
       </h5>
-
+      
       <ListGroup className="mt-3">
-        {assignments.map((assignment: any) => (
+        {courseAssignments.map((assignment: any) => (
           <ListGroup.Item
             key={assignment._id}
             className="border-start border-5 border-success mb-2"
           >
-            <div className="fw-semibold fs-6 text-primary">
-              <FaBook className="me-2" />
-              <a
-                href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
-                className="text-decoration-none text-dark"
-              >
-                {assignment.title}
-              </a>
-            </div>
-            <div className="text-muted small mt-1">
-              Assignment ID: {assignment._id}
+            <div className="d-flex justify-content-between align-items-start">
+              <div className="flex-grow-1">
+                <div className="fw-semibold fs-6 text-primary">
+                  <FaBook className="me-2" />
+                  <span
+                    onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`)}
+                    className="text-decoration-none text-dark"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {assignment.title}
+                  </span>
+                </div>
+                <div className="text-muted small mt-1">
+                  Assignment ID: {assignment._id}
+                </div>
+              </div>
+
+              {currentUser?.role === "FACULTY" && (
+                <div className="d-flex gap-2">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-primary p-0"
+                    onClick={() => handleEditAssignment(assignment._id)}
+                  >
+                    <FaPencil />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-danger p-0"
+                    onClick={() => handleDeleteClick(assignment)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </div>
+              )}
             </div>
           </ListGroup.Item>
         ))}
       </ListGroup>
+
+      <Modal show={showDeleteDialog} onHide={handleCancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to remove the assignment "{assignmentToDelete?.title}"?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
