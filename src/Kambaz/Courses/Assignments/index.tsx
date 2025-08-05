@@ -2,8 +2,8 @@ import { useParams, useNavigate } from "react-router";
 import { ListGroup, InputGroup, FormControl, Button, Modal } from "react-bootstrap";
 import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { useSelector } from "react-redux";
+import * as assignmentClient from "./client";
 import { useState } from "react";
 
 export default function Assignments() {
@@ -11,7 +11,6 @@ export default function Assignments() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-  const dispatch = useDispatch();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
@@ -29,7 +28,7 @@ export default function Assignments() {
 
   const handleConfirmDelete = () => {
     if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete._id));
+      assignmentClient.deleteAssignment(assignmentToDelete._id);
     }
     setShowDeleteDialog(false);
     setAssignmentToDelete(null);
