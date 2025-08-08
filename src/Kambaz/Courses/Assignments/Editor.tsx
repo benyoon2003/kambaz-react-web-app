@@ -1,130 +1,113 @@
-export default function AssignmentEditor() {
-    return (
-        <div id="wd-assignments-editor">
-            <label htmlFor="wd-name"><h4>Assignment Name</h4></label>
-            <input id="wd-name" value="A1 - ENV + HTML" /><br /><br />
-            <textarea id="wd-description">
-                The assignment is available online Submit a link to the landing page of your Web application...
-            </textarea>
-            <br />
-            <table>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-points">Points</label>
-                    </td>
-                    <td>
-                        <input id="wd-points" value={100} />
-                    </td>
+import { useParams, useNavigate } from "react-router";
+import { ListGroup, InputGroup, FormControl, Button } from "react-bootstrap";
+import { FaPlus, FaSearch, FaBook, FaTrash } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
 
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-group"> Assignment Group </label>
-                    </td>
-                    <td>
-                        <select id="wd-group">
-                            <option selected value="ASSIGNMENTS">
-                                ASSIGNMENTS</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-display-grade-as"> Display Grade as </label>
-                    </td>
-                    <td>
-                        <select id="wd-display-grade-as">
-                            <option selected value="Percentage">
-                                Percentage</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-submission-type"> Submission Type </label>
-                    </td>
-                    <td>
-                        <select id="wd-submission-type">
-                            <option selected value="Online">
-                                Online</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label> Online Entry Options </label>
-                    </td>
-                    <td>
+export default function Assignments() {
+  const { cid } = useParams();
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
 
-                        <input type="checkbox" name="check-entry-option" id="wd-text-entry" />
-                        <label htmlFor="wd-text-entry">Text Entry</label><br />
+  const courseAssignments = assignments.filter((a: any) => a.course === cid);
 
-                        <input type="checkbox" name="check-entry-option" id="wd-website-url" />
-                        <label htmlFor="wd-website-url">Website URL</label><br />
+  const handleAddAssignment = () => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
+  };
 
-                        <input type="checkbox" name="check-entry-option" id="wd-media-recordings" />
-                        <label htmlFor="wd-media-recordings">Media Recordings</label><br />
+  const handleDeleteAssignment = (assignmentId: string) => {
+    dispatch(deleteAssignment(assignmentId));
+  };
 
-                        <input type="checkbox" name="check-entry-option" id="wd-student-annotation" />
-                        <label htmlFor="wd-student-annotation">Student Annotations</label><br />
+  const handleEditAssignment = (assignmentId: string) => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
+  };
 
-                        <input type="checkbox" name="check-entry-option" id="wd-file-upload" />
-                        <label htmlFor="wd-file-upload">File Uploads</label>
-                    </td>
+  return (
+    <div id="wd-assignments" className="p-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <InputGroup style={{ maxWidth: "300px" }}>
+          <InputGroup.Text className="bg-white border-end-0">
+            <FaSearch className="text-muted" />
+          </InputGroup.Text>
+          <FormControl
+            placeholder="Search for Assignments"
+            className="border-start-0"
+            id="wd-search-assignment"
+          />
+        </InputGroup>
+        
+        {currentUser?.role === "FACULTY" && (
+          <div className="d-flex gap-2">
+            <Button variant="light" className="text-danger border border-secondary" id="wd-add-assignment-group">
+              <FaPlus className="me-1" /> Group
+            </Button>
+            <Button variant="danger" id="wd-add-assignment" onClick={handleAddAssignment}>
+              <FaPlus className="me-1" /> Assignment
+            </Button>
+          </div>
+        )}
+      </div>
+      
+      <h5 className="fw-bold d-flex align-items-center justify-content-between">
+        ASSIGNMENTS <span className="text-secondary">{courseAssignments.length * 10}% of Total</span>
+        {currentUser?.role === "FACULTY" && (
+          <Button variant="light" size="sm" onClick={handleAddAssignment}>
+            <FaPlus />
+          </Button>
+        )}
+      </h5>
+      
+      <ListGroup className="mt-3">
+        {courseAssignments.map((assignment: any) => (
+          <ListGroup.Item
+            key={assignment._id}
+            className="border-start border-5 border-success mb-2"
+          >
+            <div className="d-flex justify-content-between align-items-start">
+              <div className="flex-grow-1">
+                <div className="fw-semibold fs-6 text-primary">
+                  <FaBook className="me-2" />
+                  <span
+                    onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`)}
+                    className="text-decoration-none text-dark"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {assignment.title}
+                  </span>
+                </div>
+                <div className="text-muted small mt-1">
+                  Assignment ID: {assignment._id}
+                </div>
+              </div>
 
-
-                </tr>
-
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-assign-to"> Assign to </label>
-                    </td>
-                    <td>
-                        <input type="assign"
-                            placeholder="Everyone"
-                            id="wd-assign-to" /><br />
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-due-date">Due </label>
-                    </td>
-                    <td>
-                        <input type="date"
-                            value="2024-05-13"
-                            id="wd-due-date" /><br />
-                    </td>
-
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-available-from"> Available From </label>
-                    </td>
-                    <td>
-                        <input type="date"
-                            value="2024-05-06"
-                            id="wd-available-from" /><br />
-                    </td>
-
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-available-until"> Until </label>
-                    </td>
-                    <td>
-                        <input type="date"
-                            value="2024-05-20"
-                            id="wd-available-until" /><br />
-                    </td>
-
-                </tr>
-                <tr>
-                    <td align="right" valign="top"></td>
-                    <button>Cancel</button>
-                    <button>Save</button>
-                </tr>
-
-            </table>
-        </div>
-    );
+              {currentUser?.role === "FACULTY" && (
+                <div className="d-flex gap-2">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-primary p-0"
+                    onClick={() => handleEditAssignment(assignment._id)}
+                  >
+                    <FaPencil />
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-danger p-0"
+                    onClick={() => handleDeleteAssignment(assignment._id)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </div>
+  );
 }
