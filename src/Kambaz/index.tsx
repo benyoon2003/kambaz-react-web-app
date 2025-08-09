@@ -5,7 +5,6 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
 import ProtectedRoute from "./Account/ProtectedRoute";
-import * as userClient from "./Account/client";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import * as courseClient from "./Courses/client";
@@ -16,7 +15,7 @@ export default function Kambaz() {
 
   const fetchCourses = async () => {
     try {
-      const courses = await userClient.findMyCourses();
+      const courses = await courseClient.fetchAllCourses();
       setCourses(courses);
     } catch (error) {
       console.error("Failed to fetch courses:", error);
@@ -25,16 +24,18 @@ export default function Kambaz() {
 
   const addNewCourse = async (course: any) => {
     try {
-      const newCourse = await userClient.createCourse(course);
+      const newCourse = await courseClient.createCourse(course);
       setCourses([...courses, newCourse]);
     } catch (error) {
       console.error("Failed to add course:", error);
     }
   };
 
-  const deleteCourse = async (courseId: string) => {
-    setCourses(courses.filter((course) => course._id !== courseId));
-  };
+ const deleteCourse = async (courseId: string) => {
+   const status = await courseClient.deleteCourse(courseId);
+   setCourses(courses.filter((course) => course._id !== courseId));
+ };
+
 
   const updateCourse = async (course: any) => {
     await courseClient.updateCourse(course);
