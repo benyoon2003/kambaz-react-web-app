@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { FormControl } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-export default function Dashboard({courses, addNewCourse, deleteCourse, updateCourse}: {
+export default function Dashboard({ courses, addNewCourse, deleteCourse, updateCourse, enrolling, setEnrolling, updateEnrollment }: {
   courses: any[];
   addNewCourse: (course: any) => void;
   deleteCourse: (course: any) => void;
   updateCourse: (course: any) => void;
+  enrolling: boolean;
+  setEnrolling: (enrolling: boolean) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
@@ -39,7 +42,11 @@ export default function Dashboard({courses, addNewCourse, deleteCourse, updateCo
 
   return (
     <div className="p-4" id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1>
+      <h1 id="wd-dashboard-title">Dashboard
+        <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
+      </h1>
       <hr />
 
       {currentUser?.role === "FACULTY" && (
@@ -92,6 +99,15 @@ export default function Dashboard({courses, addNewCourse, deleteCourse, updateCo
                   alt={course.name}
                 />
                 <div className="card-body">
+                  {enrolling && (
+                    <button onClick={(event) => {
+                        event.preventDefault();
+                        updateEnrollment(course._id, !course.enrolled);
+                      }}
+                      className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                      {course.enrolled ? "Unenroll" : "Enroll"}
+                    </button>
+                  )}
                   <h5 className="card-title">{course.name}</h5>
                   <p className="card-text">{course.description}</p>
 
